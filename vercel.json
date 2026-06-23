@@ -2,7 +2,8 @@
   "experimentalServices": {
     "frontend": {
       "framework": "vite",
-      "entrypoint": "package.json"
+      "entrypoint": "package.json",
+      "rootDirectory": "./"
     }
   }
 }
