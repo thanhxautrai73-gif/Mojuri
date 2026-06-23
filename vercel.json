@@ -1,7 +1,8 @@
 {
   "experimentalServices": {
     "frontend": {
-      "routePrefix": "/"
+      "framework": "vite",
+      "entrypoint": "package.json"
     }
   }
 }
