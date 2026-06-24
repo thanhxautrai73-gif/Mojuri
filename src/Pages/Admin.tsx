@@ -630,7 +630,8 @@ const Admin: React.FC = () => {
                       </td>
                       <td style={{ padding: '12px 15px', fontSize: '14px' }}>
                         <span style={{ color: p.stock > 0 ? '#27ae60' : '#c0392b', fontWeight: '600' }}>
-                          {p.stock > 0 ? `${p.stock} in stock` : 'Out of stock'}
+                        {p.stock > 0 ? <span>{p.stock} in stock</span> : <span>Out of stock</span>}
+
                         </span>
                       </td>
                       <td style={{ padding: '12px 15px' }}>
