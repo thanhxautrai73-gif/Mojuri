@@ -1,15 +1,9 @@
 {
   "version": 2,
-  "projects": [
+  "rewrites": [
     {
-      "name": "frontend",
-      "framework": "vite",
-      "root": "frontend"
-    },
-    {
-      "name": "backend",
-      "framework": "nextjs",
-      "root": "backend"
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
     }
   ]
 }
