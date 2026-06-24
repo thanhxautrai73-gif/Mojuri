@@ -238,6 +238,7 @@ const Admin: React.FC = () => {
     if (!window.confirm('Are you sure you want to delete this product?')) return;
     try {
       const res = await fetch(`${API_URL}/products/${prodId}`, {
+
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -640,7 +641,8 @@ const Admin: React.FC = () => {
                           Edit
                         </button>
                         <button 
-                          onClick={() => handleDeleteProduct(p.id)}
+                          onClick={() => handleDeleteProduct((p as any)._id)}
+
                           style={{ background: '#fdf3f2', border: '1px solid #fbc4c4', color: '#c0392b', padding: '5px 10px', cursor: 'pointer', borderRadius: '3px', fontSize: '12px' }}
                         >
                           Delete
