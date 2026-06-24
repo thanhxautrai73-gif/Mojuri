@@ -2,11 +2,13 @@
   "version": 2,
   "experimentalServices": {
     "frontend": {
-      "routePrefix": "/"
+      "routePrefix": "/",
+      "framework": "vite"
     },
     "backend": {
       "root": "backend",
-      "routePrefix": "/api"
+      "routePrefix": "/api",
+      "framework": "nextjs"
     }
   }
 }
