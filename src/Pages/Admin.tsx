@@ -628,12 +628,12 @@ const Admin: React.FC = () => {
                         ${p.price.toFixed(2)}
                         {p.originalPrice && <span style={{ textDecoration: 'line-through', fontSize: '11px', color: '#999', marginLeft: '5px' }}>${p.originalPrice.toFixed(2)}</span>}
                       </td>
-                      <td style={{ padding: '12px 15px', fontSize: '14px' }}>
-                        <span style={{ color: p.stock > 0 ? '#27ae60' : '#c0392b', fontWeight: '600' }}>
-                        {p.stock > 0 ? <span>{p.stock} in stock</span> : <span>Out of stock</span>}
+                      <td>
+  <span>
+    {p.stock > 0 ? <span>{p.stock} in stock</span> : <span>Out of stock</span>}
+  </span>
+</td>
 
-                        </span>
-                      </td>
                       <td style={{ padding: '12px 15px' }}>
                         <button 
                           onClick={() => openEditProduct(p)}
