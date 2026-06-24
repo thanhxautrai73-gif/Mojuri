@@ -43,7 +43,8 @@ interface ShopContextType {
   refreshOrders: () => Promise<void>;
 }
 
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+export const API_URL = import.meta.env.VITE_API_URL || '/backend/api';
+
 
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
