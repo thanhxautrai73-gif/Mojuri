@@ -207,7 +207,7 @@ const Admin: React.FC = () => {
 
     try {
       const url = editingProduct 
-        ? `${API_URL}/products/${editingProduct.id}`
+        ? `${API_URL}/products/${(editingProduct as any)._id}`
         : `${API_URL}/products`;
       const method = editingProduct ? 'PUT' : 'POST';
 
