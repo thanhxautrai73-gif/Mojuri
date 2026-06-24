@@ -209,7 +209,7 @@ const Admin: React.FC = () => {
       const url = editingProduct 
         ? `${API_URL}/products/${(editingProduct as any)._id}`
         : `${API_URL}/products`;
-      const method = editingProduct ? 'PUT' : 'POST';
+      const method = editingProduct ? 'PATCH' : 'POST';
 
       const res = await fetch(url, {
         method,
