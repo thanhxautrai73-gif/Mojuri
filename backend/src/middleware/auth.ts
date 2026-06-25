@@ -15,7 +15,7 @@ export interface AuthenticatedRequest extends NextApiRequest {
 }
 
 const cors = Cors({
-  methods: ['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS', 'HEAD'],
+  methods: ['POST', 'GET', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
   origin: (origin, callback) => {
     // Allow localhost/127.0.0.1 on any port in development
     if (!origin || /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {

@@ -1,8 +1,22 @@
-import { setServers } from "node:dns/promises";
-setServers(["1.1.1.1", "8.8.8.8"]);
-
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import dns from 'node:dns';
+import Product from '../models/Product';
+import Blog from '../models/Blog';
+import User from '../models/User';
+import Category from '../models/Category';
+
+// Set DNS servers locally to bypass Vietnamese ISP lookup issues for MongoDB Atlas.
+// Do NOT run this on Vercel as it blocks or misroutes outbound traffic on custom DNS servers.
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  try {
+    if (dns && typeof dns.setServers === 'function') {
+      dns.setServers(["1.1.1.1", "8.8.8.8"]);
+    }
+  } catch (e) {
+    console.warn('Failed to set local DNS servers:', e);
+  }
+}
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/mojuri';
 
@@ -45,13 +59,9 @@ export async function connectDB() {
   return cached.conn;
 }
 
-// In order to avoid importing models directly before connection is initialized, we define models dynamically or inline
+// Auto-seeding database from imported models
 async function seedDatabase() {
   try {
-    const Product = mongoose.models.Product || mongoose.model('Product', new mongoose.Schema({}, { strict: false }));
-    const Blog = mongoose.models.Blog || mongoose.model('Blog', new mongoose.Schema({}, { strict: false }));
-    const User = mongoose.models.User || mongoose.model('User', new mongoose.Schema({}, { strict: false }));
-    const Category = mongoose.models.Category || mongoose.model('Category', new mongoose.Schema({}, { strict: false }));
 
     // 1. Seed categories
     const categoryCount = await Category.countDocuments();

@@ -38,6 +38,7 @@ const Admin: React.FC = () => {
 
   // Modals & form fields states
   const [showProductModal, setShowProductModal] = useState(false);
+  const [deletingProdId, setDeletingProdId] = useState<string | null>(null);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [productForm, setProductForm] = useState({
     name: '',
@@ -207,7 +208,7 @@ const Admin: React.FC = () => {
 
     try {
       const url = editingProduct 
-        ? `${API_URL}/products/${(editingProduct as any)._id}`
+        ? `${API_URL}/products/${(editingProduct as any)._id || editingProduct.id}`
         : `${API_URL}/products`;
       const method = editingProduct ? 'PATCH' : 'POST';
 
@@ -235,7 +236,6 @@ const Admin: React.FC = () => {
   };
 
   const handleDeleteProduct = async (prodId: string) => {
-    if (!window.confirm('Are you sure you want to delete this product?')) return;
     try {
       const res = await fetch(`${API_URL}/products/${prodId}`, {
 
@@ -635,19 +635,40 @@ const Admin: React.FC = () => {
 </td>
 
                       <td style={{ padding: '12px 15px' }}>
-                        <button 
-                          onClick={() => openEditProduct(p)}
-                          style={{ background: '#f0f0f0', border: '1px solid #ccc', padding: '5px 10px', cursor: 'pointer', borderRadius: '3px', marginRight: '8px', fontSize: '12px' }}
-                        >
-                          Edit
-                        </button>
-                        <button 
-                          onClick={() => handleDeleteProduct((p as any)._id)}
-
-                          style={{ background: '#fdf3f2', border: '1px solid #fbc4c4', color: '#c0392b', padding: '5px 10px', cursor: 'pointer', borderRadius: '3px', fontSize: '12px' }}
-                        >
-                          Delete
-                        </button>
+                        {deletingProdId === p.id ? (
+                          <div style={{ display: 'flex', gap: '5px' }}>
+                            <button 
+                              onClick={() => {
+                                handleDeleteProduct((p as any)._id || p.id);
+                                setDeletingProdId(null);
+                              }}
+                              style={{ background: '#d9534f', color: '#fff', border: 'none', padding: '5px 10px', cursor: 'pointer', borderRadius: '3px', fontSize: '12px', fontWeight: 'bold' }}
+                            >
+                              Confirm
+                            </button>
+                            <button 
+                              onClick={() => setDeletingProdId(null)}
+                              style={{ background: '#f0f0f0', border: '1px solid #ccc', padding: '5px 10px', cursor: 'pointer', borderRadius: '3px', fontSize: '12px' }}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          <>
+                            <button 
+                              onClick={() => openEditProduct(p)}
+                              style={{ background: '#f0f0f0', border: '1px solid #ccc', padding: '5px 10px', cursor: 'pointer', borderRadius: '3px', marginRight: '8px', fontSize: '12px' }}
+                            >
+                              Edit
+                            </button>
+                            <button 
+                              onClick={() => setDeletingProdId(p.id)}
+                              style={{ background: '#fdf3f2', border: '1px solid #fbc4c4', color: '#c0392b', padding: '5px 10px', cursor: 'pointer', borderRadius: '3px', fontSize: '12px' }}
+                            >
+                              Delete
+                            </button>
+                          </>
+                        )}
                       </td>
                     </tr>
                   ))}

@@ -33,7 +33,7 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
       return res.status(200).json(product);
     }
 
-    if (req.method === 'PUT') {
+    if (req.method === 'PUT' || req.method === 'PATCH') {
       return withAdmin(req, res, async () => {
         const { name, price, originalPrice, description, images, sku, category, stock, featured, bestSeller, trending } = req.body;
 
