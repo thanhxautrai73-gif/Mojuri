@@ -33,44 +33,49 @@ import "./App.css";
 function MainApp() {
   const { currentPage } = useShop();
 
-  // Tự động nạp lại hiệu ứng template (Slider, Menu, Dropdown) mỗi khi chuyển trang
+  // 1. Tải các thư viện nền tảng lõi một lần duy nhất khi ứng dụng khởi chạy
   useEffect(() => {
-    const scripts = [
+    const baseScripts = [
       "/js/popper.min.js",
       "/js/jquery.min.js",
       "/js/bootstrap.min.js",
       "/js/slick.min.js",
       "/js/jquery.mmenu.all.min.js",
-      "/js/app.js", // File chứa logic hiệu ứng của template đặt cuối cùng
     ];
 
-    const loadScripts = async () => {
-      // Xóa các script cũ đã chạy trước đó để tránh trùng lặp và xung đột cấu trúc
-      scripts.forEach((src) => {
-        const oldScript = document.querySelector(`script[src="${src}"]`);
-        if (oldScript) oldScript.remove();
-      });
-
-      // Tải tuần tự lại từ đầu để các thẻ HTML mới của trang vừa chuyển nhận được hiệu ứng jQuery
-      for (const src of scripts) {
-        await new Promise((resolve) => {
-          const script = document.createElement("script");
-          script.src = src;
-          script.async = false;
-          script.onload = resolve;
-          script.onerror = resolve;
-          document.body.appendChild(script);
-        });
+    const loadBase = async () => {
+      for (const src of baseScripts) {
+        if (!document.querySelector(`script[src="${src}"]`)) {
+          await new Promise((resolve) => {
+            const script = document.createElement("script");
+            script.src = src;
+            script.async = false;
+            script.onload = resolve;
+            script.onerror = resolve;
+            document.body.appendChild(script);
+          });
+        }
       }
     };
+    loadBase();
+  }, []);
 
-    // Hoãn 150ms để React dựng xong hoàn toàn giao diện của trang mới rồi mới cho jQuery quét qua
+  // 2. Kích hoạt và tải lại file hiệu ứng app.js mỗi khi người dùng chuyển trang
+  useEffect(() => {
+    // Xóa mã script cũ đã chạy để tránh lỗi xung đột vòng lặp sự kiện
+    const oldAppScript = document.querySelector('script[src="/js/app.js"]');
+    if (oldAppScript) oldAppScript.remove();
+
+    // Trì hoãn 400ms để React dựng xong hoàn toàn DOM, cách ly tuyệt đối với quá trình Hydration
     const timer = setTimeout(() => {
-      loadScripts();
-    }, 150);
+      const script = document.createElement("script");
+      script.src = "/js/app.js";
+      script.async = true;
+      document.body.appendChild(script);
+    }, 400);
 
     return () => clearTimeout(timer);
-  }, [currentPage]); // Chạy lại logic này bất cứ khi nào biến currentPage thay đổi trang
+  }, [currentPage]);
 
   const renderPage = () => {
     switch (currentPage) {
@@ -122,14 +127,14 @@ function MainApp() {
   };
 
   return (
-    // Bọc và chặn hoàn toàn lỗi Hydration/Extension can thiệp vào React bằng thuộc tính chống lỗi dưới đây
+    // Bọc suppressHydrationWarning vào toàn bộ các thẻ lớn để vô hiệu hóa lỗi sập trang
     <div
       id="page"
       className="hfeed page-wrapper"
       suppressHydrationWarning={true}
     >
       <Header />
-      {renderPage()}
+      <div suppressHydrationWarning={true}>{renderPage()}</div>
       <Footer />
       <GlobalOverlays />
     </div>
